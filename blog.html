@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Inkwell</title>
+  <meta name="description" content="Browse all articles on design, technology, culture, and productivity.">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Blog-page specific ── */
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .filter-btn {
+      padding: 0.45rem 1.1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: transparent;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    /* Search bar inline */
+    .blog-search {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      max-width: 260px;
+      margin-left: auto;
+    }
+    .blog-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--ink);
+      width: 100%;
+    }
+    .blog-search input::placeholder { color: var(--muted); }
+
+    /* Featured wide card */
+    .featured-wide {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--card-bg);
+      margin-bottom: 3rem;
+      transition: box-shadow var(--transition);
+    }
+    .featured-wide:hover { box-shadow: 0 16px 48px rgba(13,13,13,0.1); }
+    .featured-wide-img { overflow: hidden; }
+    .featured-wide-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .featured-wide:hover .featured-wide-img img { transform: scale(1.03); }
+    .featured-wide-body {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .featured-wide-body .tag { margin-bottom: 1rem; }
+    .featured-wide-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 0.9rem;
+      transition: color var(--transition);
+    }
+    .featured-wide:hover .featured-wide-body h2 { color: var(--accent); }
+    .featured-wide-body p { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.5rem; }
+    .featured-wide-body .card-meta { margin-bottom: 0; }
+
+    /* Posts grid */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 2rem 0 1rem;
+    }
+    .page-btn {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all var(--transition);
+      cursor: pointer;
+      background: transparent;
+    }
+    .page-btn:hover, .page-btn.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+
+    /* Sidebar layout on large screens */
+    .blog-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 3rem;
+      align-items: start;
+    }
+    .sidebar { position: sticky; top: 88px; }
+    .sidebar-widget {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-widget h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-post {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-post:last-child { border-bottom: none; padding-bottom: 0; }
+    .sidebar-post img { width: 60px; height: 60px; object-fit: cover; border-radius: var(--radius); flex-shrink: 0; }
+    .sidebar-post h5 {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink);
+      transition: color var(--transition);
+    }
+    .sidebar-post:hover h5 { color: var(--accent); }
+    .sidebar-post .meta { font-size: 0.72rem; color: var(--muted); margin-top: 3px; font-family: var(--font-mono); }
+
+    @media (max-width: 1024px) {
+      .blog-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+    @media (max-width: 768px) {
+      .featured-wide { grid-template-columns: 1fr; }
+      .featured-wide-img { aspect-ratio: 16/9; }
+      .posts-grid { grid-template-columns: 1fr 1fr; }
+      .blog-search { display: none; }
+    }
+    @media (max-width: 520px) {
+      .posts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <nav class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Ink<span>well</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="nav-search-btn" id="search-btn" aria-label="Search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <nav id="mobile-nav" class="mobile-nav container">
+    <a href="index.html">Home</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<!-- ═══ PAGE HERO ═══ -->
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">The Journal</p>
+    <h1>All <em>Articles</em></h1>
+    <p>Exploring design, technology, culture, and the craft of thinking clearly.</p>
+    <div class="divider"></div>
+  </div>
+</section>
+
+<!-- ═══ CONTENT ═══ -->
+<main style="padding: 1rem 0 4rem;">
+  <div class="container">
+    <div class="blog-layout">
+
+      <!-- MAIN COLUMN -->
+      <div>
+        <!-- Filter + Search -->
+        <div class="filter-bar fade-up">
+          <button class="filter-btn active" data-cat="all">All</button>
+          <button class="filter-btn" data-cat="design">Design</button>
+          <button class="filter-btn" data-cat="tech">Technology</button>
+          <button class="filter-btn" data-cat="culture">Culture</button>
+          <button class="filter-btn" data-cat="productivity">Productivity</button>
+          <button class="filter-btn" data-cat="writing">Writing</button>
+          <div class="blog-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="search-input" type="search" placeholder="Search articles…" />
+          </div>
+        </div>
+
+        <!-- Featured wide -->
+        <a href="#" class="featured-wide fade-up">
+          <div class="featured-wide-img">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=700&q=80&auto=format" alt="Deep work" loading="eager" />
+          </div>
+          <div class="featured-wide-body">
+            <span class="tag">Productivity</span>
+            <h2>The Art of Deep Work in a World of Distraction</h2>
+            <p>How to reclaim your focus, protect your most creative hours, and produce work that truly matters in an age of constant interruption.</p>
+            <div class="card-meta">
+              <span>April 14, 2025</span>
+              <span class="dot"></span>
+              <span>8 min read</span>
+              <span class="dot"></span>
+              <span>By Alex Chen</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Grid -->
+        <div class="posts-grid">
+
+          <article class="card post-card fade-up" data-cat="design">
+            <a href="#"><div class="card-img"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&q=75&auto=format" alt="Design System" loading="lazy" /></div></a>
+            <div class="card-body">
+              <div class="card-meta"><span class="tag">Design</span><span class="dot"></span><span>Apr 10</span></div>
+              <a href="#"><h3>Building a Design System That Actually Scales</h3></a>
+              <p>Tokens, components, and the hidden glue that keeps large product teams aligned.</p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">6 min</span>
+            </div>
+          </article>
+
+          <article class="card post-card fade-up" data-cat="tech" style="transition-delay:0.05s">
+            <a href="#"><div class="card-img"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=500&q=75&auto=format" alt="AI" loading="lazy" /></div></a>
+            <div class="card-body">
+              <div class="card-meta"><span class="tag">Technology</span><span class="dot"></span><span>Apr 6</span></div>
+              <a href="#"><h3>How AI is Rewriting the Rules of Creative Work</h3></a>
+              <p>A grounded look at which parts of the creative process AI enhances—and which it can't touch.</p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">9 min</span>
+            </div>
+          </article>
+
+          <article class="card post-card fade-up" data-cat="culture" style="transition-delay:0.1s">
+            <a href="#"><div class="card-img"><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=500&q=75&auto=format" alt="Books" loading="lazy" /></div></a>
+            <div class="card-body">
+              <div class="card-meta"><span class="tag">Culture</span><span class="dot"></span><span>Mar 30</span></div>
+              <a href="#"><h3>Why Reading Physical Books Still Changes Your Brain</h3></a>
+              <p>The neuroscience of deep reading and why paper resists the attention economy.</p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">7 min</span>
+            </div>
+          </article>
+
+          <article class="card post-card fade-up" data-cat="writing">
+            <a href="#"><div class="card-img"><img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=500&q=75&auto=format" alt="Writing" loading="lazy" /></div></a>
+            <div class="card-body">
+              <div class="card-meta"><span class="tag">Writing</span><span class="dot"></span><span>Mar 24</span></div>
+              <a href="#"><h3>Write Like Nobody's Reading (At First)</h3></a>
+              <p>First drafts are just thinking on paper. Here's why protecting that messy stage matters.</p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">5 min</span>
+            </div>
+          </article>
+
+          <article class="card post-card fade-up" data-cat="design" style="transition-delay:0.05s">
+            <a href="#"><div class="card-img"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=75&auto=format" alt="Typography" loading="lazy" /></div></a>
+            <div class="card-body">
+              <div class="card-meta"><span class="tag">Design</span><span class="dot"></span><span>Mar 18</span></div>
+              <a href="#"><h3>The Quiet Power of Good Typography</h3></a>
+              <p>Why the fonts you choose shape how readers feel before they read a single word.</p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">6 min</span>
+            </div>
+          </article>
+
+          <article class="card post-card fade-up" data-cat="productivity" style="transition-delay:0.1s">
+            <a href="#"><div class="card-img"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&q=75&auto=format" alt="Morning routine" loading="lazy" /></div></a>
+            <div class="card-body">
+              <div class="card-meta"><span class="tag">Productivity</span><span class="dot"></span><span>Mar 12</span></div>
+              <a href="#"><h3>The Morning Routine That Isn't a Routine</h3></a>
+              <p>Flexibility, not rigidity, might be the real secret to starting your day with intention.</p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">4 min</span>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination fade-up">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <span style="color:var(--muted); padding:0 0.5rem;">…</span>
+          <button class="page-btn">8</button>
+          <button class="page-btn" style="width:auto;padding:0 1rem;gap:6px;">
+            Next
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-widget fade-up">
+          <h4>Popular This Week</h4>
+          <a href="#" class="sidebar-post" style="text-decoration:none;display:flex;">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=120&q=75&auto=format" alt="Deep Work" />
+            <div>
+              <h5>The Art of Deep Work in a World of Distraction</h5>
+              <div class="meta">8 min · Productivity</div>
+            </div>
+          </a>
+          <a href="#" class="sidebar-post" style="text-decoration:none;display:flex;">
+            <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=120&q=75&auto=format" alt="AI" />
+            <div>
+              <h5>How AI is Rewriting the Rules of Creative Work</h5>
+              <div class="meta">9 min · Technology</div>
+            </div>
+          </a>
+          <a href="#" class="sidebar-post" style="text-decoration:none;display:flex;">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=120&q=75&auto=format" alt="Design" />
+            <div>
+              <h5>Building a Design System That Actually Scales</h5>
+              <div class="meta">6 min · Design</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="sidebar-widget fade-up" style="transition-delay:0.1s">
+          <h4>Newsletter</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.75rem;margin-bottom:1.25rem;line-height:1.6;">Weekly essays. No spam, ever.</p>
+          <div style="display:flex;flex-direction:column;gap:0.65rem;" onsubmit="return false;">
+            <input type="email" placeholder="your@email.com" style="width:100%;display:block;padding:0.75rem 1rem;font-family:var(--font-body);font-size:0.88rem;border:1.5px solid var(--border);border-radius:4px;background:var(--cream);color:var(--ink);outline:none;box-sizing:border-box;" />
+            <button onclick="return false;" style="width:100%;display:block;padding:0.8rem 1rem;background:var(--accent);color:#fff;font-family:var(--font-body);font-size:0.8rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;">SUBSCRIBE →</button>
+          </div>
+        </div>
+
+        <div class="sidebar-widget fade-up" style="transition-delay:0.2s">
+          <h4>Tags</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">
+            <a href="#" class="tag">Design</a>
+            <a href="#" class="tag">Technology</a>
+            <a href="#" class="tag">Culture</a>
+            <a href="#" class="tag">Writing</a>
+            <a href="#" class="tag">Focus</a>
+            <a href="#" class="tag">AI</a>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">Ink<span>well</span></a>
+        <p>An independent journal for curious thinkers. Published with care since 2021.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Topics</h4>
+        <ul>
+          <li><a href="blog.html">Design</a></li>
+          <li><a href="blog.html">Technology</a></li>
+          <li><a href="blog.html">Culture</a></li>
+          <li><a href="blog.html">Productivity</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Inkwell. Crafted with intention.</span>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="#" aria-label="RSS"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>

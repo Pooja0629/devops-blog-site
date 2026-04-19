@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Inkwell</title>
+  <meta name="description" content="Learn about the writer behind Inkwell and the philosophy behind the journal.">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── About-page specific ── */
+
+    /* Author hero */
+    .about-hero {
+      padding: 4rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: linear-gradient(160deg, rgba(200,64,26,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .about-hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-text .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+    .about-text h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+    .about-text h1 em { font-style: italic; color: var(--accent); }
+    .about-text p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 1.1rem;
+      max-width: 520px;
+    }
+    .about-text .social-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0.55rem 1.1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all var(--transition);
+    }
+    .social-link:hover { border-color: var(--ink); color: var(--ink); background: rgba(13,13,13,0.03); }
+
+    /* Profile card */
+    .profile-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(13,13,13,0.08);
+    }
+    .profile-card-img {
+      aspect-ratio: 1/1;
+      background: linear-gradient(135deg, #2c1a0a 0%, #5c2d0e 40%, #8b4513 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 6rem;
+      font-weight: 900;
+      color: rgba(245,240,232,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: absolute; inset: 0;
+    }
+    .profile-card-body { padding: 1.75rem; }
+    .profile-card-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .profile-card-body .role {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0.4rem 0 1rem;
+    }
+    .profile-card-body p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      margin-top: 1.25rem;
+    }
+    .profile-stat {
+      padding: 1rem 1.25rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .profile-stat:nth-child(even) { border-right: none; }
+    .profile-stat:nth-child(3), .profile-stat:nth-child(4) { border-top: 1px solid var(--border); }
+    .profile-stat .num {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--ink);
+      display: block;
+    }
+    .profile-stat .lbl {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Values */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .value-card {
+      padding: 2rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(13,13,13,0.08);
+    }
+    .value-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .value-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+    .value-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* Timeline */
+    .timeline { margin-top: 2.5rem; position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--gold), var(--border));
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2.5rem;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.4rem; top: 6px;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .timeline-item .year {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .timeline-item h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    .timeline-item p { font-size: 0.88rem; color: var(--muted); }
+
+    /* CTA block */
+    .about-cta {
+      background: var(--ink);
+      border-radius: 10px;
+      padding: 3.5rem;
+      text-align: center;
+      color: var(--paper);
+      margin: 4rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(201,168,76,0.12), transparent 60%),
+                  radial-gradient(circle at 75% 20%, rgba(200,64,26,0.1), transparent 50%);
+      pointer-events: none;
+    }
+    .about-cta h2 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      position: relative;
+    }
+    .about-cta h2 em { color: var(--gold); font-style: italic; }
+    .about-cta p { margin: 1rem auto 2rem; max-width: 420px; font-size: 0.95rem; color: rgba(245,240,232,0.6); position: relative; }
+    .about-cta .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.8rem;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: background var(--transition);
+    }
+    .btn-gold:hover { background: #b8964a; }
+    .btn-ghost-light {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.8rem;
+      border: 1.5px solid rgba(245,240,232,0.3);
+      color: var(--paper);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .btn-ghost-light:hover { border-color: var(--paper); background: rgba(245,240,232,0.08); }
+
+    @media (max-width: 900px) {
+      .about-hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .values-grid { grid-template-columns: 1fr 1fr; }
+      .about-cta { padding: 2.5rem 1.5rem; }
+    }
+    @media (max-width: 540px) {
+      .values-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <nav class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Ink<span>well</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="nav-search-btn" aria-label="Search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <nav id="mobile-nav" class="mobile-nav container">
+    <a href="index.html">Home</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<!-- ═══ ABOUT HERO ═══ -->
+<section class="about-hero">
+  <div class="container">
+    <div class="about-hero-inner">
+      <div class="about-text fade-up">
+        <p class="eyebrow">About the author</p>
+        <h1>Writing at the edge of <em>ideas</em>.</h1>
+        <p>I'm Shree — a writer, designer, and lifelong learner based in San Francisco. I started Inkwell in 2021 as a place to think out loud about the things that matter most to me.</p>
+        <p>My writing lives at the intersection of technology and the human experience: how we create, how we think, and what it means to live and work with intention in a fast-moving world.</p>
+        <p>I believe good writing is a form of respect — for the reader's time, intelligence, and curiosity. That belief shapes everything published here.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Twitter/X
+          </a>
+          <a href="#" class="social-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="mailto:hello@inkwell.com" class="social-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email me
+          </a>
+        </div>
+      </div>
+
+      <div class="fade-up" style="transition-delay:0.15s">
+        <div class="profile-card">
+          <div class="profile-card-img">
+            <img src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8zNV8zZF9yZW5kZXJfY2hhcmFjdGVyX29mX2FtZXJpY2FuX2dpcmxfdHJ5X3RvX19iYzNjYzNjNi02ZGIwLTQ0NDUtOWY4Mi04NDY1NGJhN2NmOTEucG5n.png" alt="Shree" />
+          </div>
+          <div class="profile-card-body">
+            <h3>Shree</h3>
+            <p class="role">Writer · Designer · Thinker</p>
+            <p>Exploring the art of living deliberately in an age of speed and distraction.</p>
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat"><span class="num">120+</span><span class="lbl">Articles</span></div>
+            <div class="profile-stat"><span class="num">18k</span><span class="lbl">Readers</span></div>
+            <div class="profile-stat"><span class="num">4</span><span class="lbl">Years Active</span></div>
+            <div class="profile-stat"><span class="num">6</span><span class="lbl">Topics</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VALUES ═══ -->
+<section style="padding: 2rem 0 4rem; background: var(--cream);">
+  <div class="container">
+    <div class="section-title fade-up">
+      <h2>What This Journal Stands For</h2>
+      <div class="line"></div>
+    </div>
+    <div class="values-grid">
+      <div class="value-card fade-up">
+        <div class="value-icon">✦</div>
+        <h3>Depth Over Volume</h3>
+        <p>One well-considered essay beats ten shallow takes. Every piece here goes through multiple rewrites before it earns a publish date.</p>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.07s">
+        <div class="value-icon">🔍</div>
+        <h3>Honest Exploration</h3>
+        <p>I follow the idea wherever it goes, even if it contradicts what I thought I believed. Intellectual honesty is non-negotiable.</p>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.14s">
+        <div class="value-icon">🌱</div>
+        <h3>Practical Wisdom</h3>
+        <p>Good ideas should change how you live, not just how you think. Every essay ends with something you can actually use.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STORY / TIMELINE ═══ -->
+<section style="padding: 4rem 0;">
+  <div class="container" style="max-width: 760px;">
+    <div class="section-title fade-up">
+      <h2>The Story So Far</h2>
+      <div class="line"></div>
+    </div>
+    <div class="timeline fade-up">
+      <div class="timeline-item">
+        <div class="year">2021</div>
+        <h4>Inkwell Launched</h4>
+        <p>Started as a small newsletter for friends. The first essay on "slow reading" unexpectedly reached 3,000 people in a week.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">2022</div>
+        <h4>First 1,000 Subscribers</h4>
+        <p>Crossed the thousand-reader milestone. Expanded from productivity into design and technology. Became a weekly publication.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">2023</div>
+        <h4>Redesign & New Topics</h4>
+        <p>Launched the current site design. Added culture and creative writing as regular topics. Hit 8,000 monthly readers.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">2024</div>
+        <h4>Collaboration & Guest Writers</h4>
+        <p>Invited guest contributors for the first time. Published a 12-part series on the future of creative work that drew 50k views.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">2025</div>
+        <h4>18k Readers & Growing</h4>
+        <p>Inkwell now reaches over 18,000 readers monthly. Still independent. Still no ads. Still written with care.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section style="padding: 0 0 2rem;">
+  <div class="container">
+    <div class="about-cta fade-up">
+      <h2>Ready to read something <em>worth your time?</em></h2>
+      <p>Browse the full archive or subscribe to the newsletter and get new essays delivered every week.</p>
+      <div class="cta-buttons">
+        <a href="blog.html" class="btn-gold">Browse the blog</a>
+        <a href="#newsletter" class="btn-ghost-light">Subscribe free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter anchor -->
+<section id="newsletter" style="padding: 2rem 0 0;">
+  <div class="container">
+    <div class="newsletter-strip fade-up">
+      <div class="nl-text">
+        <h3>Get ideas in your <em>inbox</em></h3>
+        <p>New essays every week. No noise, no spam—just writing worth your time.</p>
+      </div>
+      <form class="nl-form" onsubmit="return false;">
+        <input type="email" placeholder="your@email.com" />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">Ink<span>well</span></a>
+        <p>An independent journal for curious thinkers. Published with care since 2021.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Topics</h4>
+        <ul>
+          <li><a href="blog.html">Design</a></li>
+          <li><a href="blog.html">Technology</a></li>
+          <li><a href="blog.html">Culture</a></li>
+          <li><a href="blog.html">Productivity</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Inkwell. Crafted with intention.</span>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="#" aria-label="RSS"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>

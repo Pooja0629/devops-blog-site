@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inkwell — Ideas Worth Reading</title>
+  <meta name="description" content="Inkwell is a modern editorial blog covering design, technology, culture, and the art of thinking.">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Homepage-specific ── */
+
+    /* Hero */
+    .hero {
+      padding: 5rem 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -8%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,64,26,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-content .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+    .hero-content h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.4rem;
+    }
+    .hero-content h1 em { font-style: italic; color: var(--accent); }
+    .hero-content p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 2rem;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.8rem;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: background var(--transition), transform var(--transition);
+    }
+    .btn-primary:hover { background: #a83415; transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.8rem;
+      border: 1.5px solid var(--border);
+      color: var(--ink);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .btn-ghost:hover { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+
+    /* Featured post */
+    .hero-featured {
+      position: relative;
+    }
+    .featured-card {
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--card-bg);
+      box-shadow: 0 24px 64px rgba(13,13,13,0.12);
+      position: relative;
+    }
+    .featured-card-img {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #1a0f0a 0%, #3d1a0d 50%, #1a0f0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .featured-card-body {
+      padding: 1.6rem;
+    }
+    .featured-card-body .tag { margin-bottom: 0.75rem; }
+    .featured-card-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+    .featured-card-body p { font-size: 0.87rem; color: var(--muted); }
+    .featured-badge {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    /* Stats strip */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 3.5rem 0;
+    }
+    .stat-item {
+      padding: 1.5rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-item .num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+    }
+    .stat-item .label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    /* Posts grid */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    .posts-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.75rem;
+    }
+
+    /* Topics */
+    .topics-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .topic-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.6rem 1.2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--ink);
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .topic-pill:hover {
+      border-color: var(--accent);
+      background: rgba(200,64,26,0.04);
+    }
+    .topic-pill .count-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-content h1 { font-size: 2.8rem; }
+      .posts-grid { grid-template-columns: 1fr 1fr; }
+      .posts-grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .posts-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: 1fr; }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat-item:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <nav class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Ink<span>well</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <button class="nav-search-btn" id="search-btn" aria-label="Search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <!-- Search bar -->
+    <div id="search-bar" style="max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0;" class="">
+      <div style="padding:0.75rem 0;">
+        <input id="search-input" type="search" placeholder="Search articles…" style="width:100%;padding:0.7rem 1rem;font-family:var(--font-body);font-size:0.95rem;border:1px solid var(--border);border-radius:4px;background:var(--cream);outline:none;color:var(--ink);">
+      </div>
+    </div>
+  </nav>
+  <nav id="mobile-nav" class="mobile-nav container" role="navigation" aria-label="Mobile">
+    <a href="index.html">Home</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+<script>
+  // quick search toggle
+  document.getElementById('search-btn').addEventListener('click', () => {
+    const bar = document.getElementById('search-bar');
+    const open = bar.style.maxHeight === '0px' || !bar.style.maxHeight;
+    bar.style.maxHeight = open ? '80px' : '0px';
+    bar.style.padding   = open ? '' : '0';
+    if(open) document.getElementById('search-input').focus();
+  });
+</script>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content fade-up">
+        <p class="eyebrow">✦ Welcome to the Journal</p>
+        <h1>Ideas that <em>move</em> the world forward.</h1>
+        <p>Thoughtful writing on design, technology, culture, and creative practice—for curious minds.</p>
+        <div class="hero-cta">
+          <a href="blog.html" class="btn-primary">
+            Read the blog
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="about.html" class="btn-ghost">About me</a>
+        </div>
+      </div>
+
+      <div class="hero-featured fade-up" style="transition-delay:0.15s">
+        <a href="blog.html" class="featured-card" style="display:block;">
+          <div class="featured-card-img">
+            <div class="featured-badge">Featured</div>
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80&auto=format" alt="The art of deep work" loading="eager" />
+          </div>
+          <div class="featured-card-body">
+            <span class="tag">Productivity</span>
+            <h2>The Art of Deep Work in a World of Distraction</h2>
+            <p>How to reclaim your focus, protect your most creative hours, and produce work that truly matters.</p>
+            <div class="card-meta" style="margin-top:0.9rem; margin-bottom:0;">
+              <span>April 14, 2025</span>
+              <span class="dot"></span>
+              <span>8 min read</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section style="padding: 0 0 2rem;">
+  <div class="container">
+    <div class="stats-strip fade-up">
+      <div class="stat-item">
+        <span class="num">120+</span>
+        <span class="label">Articles Published</span>
+      </div>
+      <div class="stat-item">
+        <span class="num">18k</span>
+        <span class="label">Monthly Readers</span>
+      </div>
+      <div class="stat-item">
+        <span class="num">6</span>
+        <span class="label">Topics Covered</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RECENT POSTS ═══ -->
+<section style="padding: 2rem 0;">
+  <div class="container">
+    <div class="section-title fade-up">
+      <h2>Recent Posts</h2>
+      <div class="line"></div>
+      <span class="count">latest</span>
+    </div>
+    <div class="posts-grid">
+
+      <article class="card post-card fade-up" data-cat="design" style="transition-delay:0.05s">
+        <a href="blog.html">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&q=75&auto=format" alt="Design Systems" loading="lazy" />
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="tag">Design</span>
+            <span class="dot"></span>
+            <span>Apr 10</span>
+          </div>
+          <a href="blog.html"><h3>Building a Design System That Actually Scales</h3></a>
+          <p>Tokens, components, and the hidden glue that keeps large product teams aligned.</p>
+        </div>
+        <div class="card-footer">
+          <a href="blog.html" class="read-more">
+            Read more
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">6 min</span>
+        </div>
+      </article>
+
+      <article class="card post-card fade-up" data-cat="tech" style="transition-delay:0.1s">
+        <a href="blog.html">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=500&q=75&auto=format" alt="AI Tools" loading="lazy" />
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="tag">Technology</span>
+            <span class="dot"></span>
+            <span>Apr 6</span>
+          </div>
+          <a href="blog.html"><h3>How AI is Rewriting the Rules of Creative Work</h3></a>
+          <p>A grounded look at which parts of the creative process AI enhances—and which it can't touch.</p>
+        </div>
+        <div class="card-footer">
+          <a href="blog.html" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">9 min</span>
+        </div>
+      </article>
+
+      <article class="card post-card fade-up" data-cat="culture" style="transition-delay:0.15s">
+        <a href="blog.html">
+          <div class="card-img">
+            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=500&q=75&auto=format" alt="Reading habits" loading="lazy" />
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="tag">Culture</span>
+            <span class="dot"></span>
+            <span>Mar 30</span>
+          </div>
+          <a href="blog.html"><h3>Why Reading Physical Books Still Changes Your Brain</h3></a>
+          <p>The neuroscience of deep reading and why paper resists the attention economy.</p>
+        </div>
+        <div class="card-footer">
+          <a href="blog.html" class="read-more">Read more <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">7 min</span>
+        </div>
+      </article>
+
+    </div>
+
+    <div style="text-align:center; margin-top:2.5rem;" class="fade-up">
+      <a href="blog.html" class="btn-ghost">View all articles</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOPICS ═══ -->
+<section style="padding: 3rem 0;">
+  <div class="container">
+    <div class="section-title fade-up">
+      <h2>Browse Topics</h2>
+      <div class="line"></div>
+    </div>
+    <div class="topics-strip fade-up">
+      <a href="blog.html" class="topic-pill">✦ Design <span class="count-badge">24</span></a>
+      <a href="blog.html" class="topic-pill">⚡ Technology <span class="count-badge">31</span></a>
+      <a href="blog.html" class="topic-pill">📖 Culture <span class="count-badge">18</span></a>
+      <a href="blog.html" class="topic-pill">🧠 Productivity <span class="count-badge">22</span></a>
+      <a href="blog.html" class="topic-pill">🌱 Mindfulness <span class="count-badge">14</span></a>
+      <a href="blog.html" class="topic-pill">✍️ Writing <span class="count-badge">11</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER ═══ -->
+<section style="padding: 2rem 0;">
+  <div class="container">
+    <div class="newsletter-strip fade-up">
+      <div class="nl-text">
+        <h3>Get ideas in your <em>inbox</em></h3>
+        <p>New essays every week. No noise, no spam—just writing worth your time.</p>
+      </div>
+      <form class="nl-form" onsubmit="return false;">
+        <input type="email" placeholder="your@email.com" />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">Ink<span>well</span></a>
+        <p>An independent journal for curious thinkers. Published with care since 2021.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Topics</h4>
+        <ul>
+          <li><a href="blog.html">Design</a></li>
+          <li><a href="blog.html">Technology</a></li>
+          <li><a href="blog.html">Culture</a></li>
+          <li><a href="blog.html">Productivity</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Inkwell. Crafted with intention.</span>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="#" aria-label="RSS">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>
