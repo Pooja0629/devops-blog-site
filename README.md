@@ -37,7 +37,7 @@ User → Browser → EC2 Instance → Nginx → Blog Website
 ## 📂 Project Structure
 
 ```
-.
+
 ├── index.html
 ├── about.html
 ├── blog.html
@@ -123,4 +123,9 @@ This project demonstrates a complete beginner-friendly DevOps workflow using AWS
 
 ---
 
+##  Contact
+
+* Author: ***Pooja S***
+* Email: [poojashree2266@gmail.com](mailto:poojashree2266@gmail.com)
+* GitHub: [Pooja0629](https://github.com/Pooja0629)
 
