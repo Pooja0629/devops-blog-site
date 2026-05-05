@@ -1,4 +1,4 @@
-# 🌐 DevOps Blog Deployment using AWS, Terraform & GitHub
+# 🌐 Blog Deployment using AWS, Terraform & GitHub
 
 ## 📌 Project Overview
 
