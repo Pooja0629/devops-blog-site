@@ -37,7 +37,6 @@ User → Browser → EC2 Instance → Nginx → Blog Website
 ## 📂 Project Structure
 
 ```
-
 ├── index.html
 ├── about.html
 ├── blog.html
